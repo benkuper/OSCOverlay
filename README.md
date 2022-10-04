@@ -11,6 +11,8 @@ A new Flutter project.
 - Enter the phone's IP in your OSC software and start controlling the phone
 - You can either send a /stop command or double-tap the overlay to close it 
 
+- To easily test the commands, you can use the overlaycontrol.noisette file inside control_example with Chataigne ( https://benjamin.kuperberg.fr/Chataigne ) 
+
 ## Commands
 - /play < file.ext:string > (mp3, mp4, wav...)
 - /play < url:string > ( http://192.168.1.10/file.mp4 )

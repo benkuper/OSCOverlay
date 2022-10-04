@@ -12,11 +12,11 @@ A new Flutter project.
 - You can either send a /stop command or double-tap the overlay to close it 
 
 ## Commands
-- /play <file.ext> (mp3, mp4, wav...)
-- /play <url> (http://192.168.1.10/file.mp4)"
-- /stop // this closes the overlay.
-- /vibrate <time> (seconds)
-- /color <r> <g> <b> (floats)
-- /text <text> [<fontSize> <textColor r g b> <bgColor r g b>]
+- /play < file.ext:string > (mp3, mp4, wav...)
+- /play < url:string > ( http://192.168.1.10/file.mp4 )
+- /stop
+- /vibrate < time:float > ( seconds )
+- /color < r:float > < g:float > < b:float > ( each channel between 0 and 1)
+- /text < text > [< fontSize: float > < textColor: r g b > < bgColor: r g b >]
 
 Local media files should be placed in the app folder shown in the main screen of the app

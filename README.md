@@ -1,6 +1,5 @@
 # oscoverlay
 
-A new Flutter project.
 
 ## Getting Started
 

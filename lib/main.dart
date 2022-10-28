@@ -10,7 +10,6 @@ import 'package:osc/osc.dart';
 import 'package:video_player/video_player.dart';
 import 'package:vibration/vibration.dart';
 import 'package:path_provider/path_provider.dart';
-
 class OverlayCommand {
   String command;
   dynamic data;
@@ -48,17 +47,25 @@ class _MyAppState extends State<MyApp> {
   final osc = OSCSocket(serverPort: 9000);
 
   Directory? libDir;
+  String ip = "[not found]";
 
   @override
   void initState() {
     super.initState();
     osc.listen(onOSCData);
 
+    getIp();
+
     WidgetsFlutterBinding.ensureInitialized();
     getExternalStorageDirectory().then((value) {
       libDir = value;
       setState(() {});
     });
+  }
+
+  void getIp() async
+  {
+    NetworkInfo().getWifiIP().
   }
 
   void onOSCData(msg) async {
@@ -74,8 +81,23 @@ class _MyAppState extends State<MyApp> {
         try {
           FlutterOverlayApps.showOverlay(alignment: OverlayAlignment.topLeft);
           await Future.delayed(const Duration(milliseconds: 20));
+
+          bool loop =
+              msg.arguments.length > 1 ? msg.arguments[1].toBool() : false;
+          double start =
+              msg.arguments.length > 2 ? msg.arguments[2].toDouble() : 0;
+          bool end =
+              msg.arguments.length > 3 ? msg.arguments[3].toDouble() : -1;
+
+          Object data = {
+            "file": msg.arguments[0]?.toString(),
+            "loop": loop,
+            "start": start,
+            "end": end
+          };
+
           FlutterOverlayApps.sendDataToAndFromOverlay(
-              jsonEncode(OverlayCommand("play", msg.arguments[0].toString())));
+              jsonEncode(OverlayCommand("play", data)));
         } on Exception catch (_) {
           print("Error launching video");
         }
@@ -123,7 +145,12 @@ class _MyAppState extends State<MyApp> {
             : Colors.black;
 
         FlutterOverlayApps.sendDataToAndFromOverlay(jsonEncode(OverlayCommand(
-            "text",{"text": t, "fontSize": size, "textColor": tc.value, "bgColor": bc.value})));
+            "text", {
+          "text": t,
+          "fontSize": size,
+          "textColor": tc.value,
+          "bgColor": bc.value
+        })));
         break;
     }
   }
@@ -146,8 +173,8 @@ class _MyAppState extends State<MyApp> {
                 Padding(
                   padding: EdgeInsets.all(50),
                   child: Text(
-                      "Commands :\n\n/play <file.ext> (mp3, mp4, wav...)\n/play <url> (http://192.168.1.10/file.mp4)" +
-                          "\n/stop\n/vibrate <time> (seconds)\n/color <r> <g> <b> (floats)\n/text <text> [<fontSize> <textColor r g b> <bgColor r g b>]\n\n\n" +
+                      "Commands :\n\n/play <file.ext> (mp3, mp4, wav...) [loop (0/1), start(0-... seconds), end(0-...)]\n\n/play <url> (http://192.168.1.10/file.mp4) [loop (0/1), start(0-... seconds), end(0-...)]" +
+                          "\n\n/stop\n\n/vibrate <time> (seconds)\n\n/color <r> <g> <b> (floats)\n\n/text <text> [<fontSize> <textColor r g b> <bgColor r g b>]\n\n\n\n" +
                           "Local files should be placed in \n" +
                           (libDir != null ? libDir!.path : "")),
                 ),
@@ -203,18 +230,19 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
     bgColor = Colors.black;
     fontSize = 30;
     textColor = Colors.white;
-    
+
     isPlaying = false;
 
     switch (command) {
       case "play":
+      case "playAt":
         {
           print("play : ");
           isPlaying = true;
 
           Directory? libDir = await getExternalStorageDirectory();
 
-          var filename = c["data"].toString();
+          var filename = c["data"]["file"].toString();
           if (filename.startsWith("http")) {
             player = VideoPlayerController.network(filename);
           } else {
@@ -222,18 +250,28 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
             player = VideoPlayerController.file(f);
           }
 
+          bool loop = c["data"]["loop"];
+          double start = c["data"]["start"];
+          double end = c["data"]["end"];
+
+
+          if (start > 0)
+            player!.seekTo(Duration(milliseconds: (start * 1000).toInt()));
+
           player!.addListener(() {
             setState(() {});
+            if(end > start) player?.position.then((value) => checkPos(value, start, end, loop));
           });
-          //player!.setLooping(true);
 
           try {
             player!.initialize().then((_) => setState(() {}));
+            player!.setLooping(loop);
             player!.play();
           } on Exception catch (_) {
             print("Error playing video, probably intent problem");
           }
         }
+
 
         break;
 
@@ -253,6 +291,15 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
         textColor = Color(d["textColor"]);
         bgColor = Color(d["bgColor"]);
         break;
+    }
+  }
+  
+  void checkPos(pos, start, end, loop)
+  {
+    if(pos > end)
+    {
+      if(loop) player?.seekTo(start) ;
+      else player?.pause();
     }
   }
 

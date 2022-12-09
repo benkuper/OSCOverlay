@@ -1,7 +1,7 @@
 {
   "metaData": {
-    "version": "1.9.8b8",
-    "versionNumber": 67848
+    "version": "1.9.13",
+    "versionNumber": 67853
   },
   "projectSettings": {
     "containers": {
@@ -28,32 +28,32 @@
   "layout": {
     "mainLayout": {
       "type": 1,
-      "width": 914,
-      "height": 980,
+      "width": 1920,
+      "height": 989,
       "direction": 2,
       "shifters": [
         {
           "type": 1,
-          "width": 914,
-          "height": 980,
+          "width": 1920,
+          "height": 989,
           "direction": 2,
           "shifters": [
             {
               "type": 1,
-              "width": 914,
-              "height": 609,
+              "width": 1920,
+              "height": 614,
               "direction": 1,
               "shifters": [
                 {
                   "type": 1,
                   "width": 195,
-                  "height": 609,
+                  "height": 614,
                   "direction": 2,
                   "shifters": [
                     {
                       "type": 0,
                       "width": 195,
-                      "height": 314,
+                      "height": 316,
                       "currentContent": "Modules",
                       "tabs": [
                         {
@@ -64,7 +64,7 @@
                     {
                       "type": 0,
                       "width": 195,
-                      "height": 289,
+                      "height": 291,
                       "currentContent": "Custom Variables",
                       "tabs": [
                         {
@@ -76,8 +76,8 @@
                 },
                 {
                   "type": 0,
-                  "width": 229,
-                  "height": 609,
+                  "width": 1171,
+                  "height": 614,
                   "currentContent": "State Machine",
                   "tabs": [
                     {
@@ -96,8 +96,8 @@
                 },
                 {
                   "type": 0,
-                  "width": 478,
-                  "height": 609,
+                  "width": 542,
+                  "height": 614,
                   "currentContent": "Inspector",
                   "tabs": [
                     {
@@ -109,14 +109,14 @@
             },
             {
               "type": 1,
-              "width": 914,
-              "height": 365,
+              "width": 1920,
+              "height": 369,
               "direction": 1,
               "shifters": [
                 {
                   "type": 0,
                   "width": 178,
-                  "height": 365,
+                  "height": 369,
                   "currentContent": "Sequences",
                   "tabs": [
                     {
@@ -126,8 +126,8 @@
                 },
                 {
                   "type": 0,
-                  "width": 352,
-                  "height": 365,
+                  "width": 1358,
+                  "height": 369,
                   "currentContent": "Sequence Editor",
                   "tabs": [
                     {
@@ -138,7 +138,7 @@
                 {
                   "type": 0,
                   "width": 372,
-                  "height": 365,
+                  "height": 369,
                   "currentContent": "Logger",
                   "tabs": [
                     {
@@ -163,6 +163,12 @@
   "modules": {
     "items": [
       {
+        "parameters": [
+          {
+            "value": true,
+            "controlAddress": "/logOutgoing"
+          }
+        ],
         "niceName": "OSC",
         "type": "OSC",
         "scripts": {
@@ -203,7 +209,7 @@
                       "controlAddress": "/local"
                     },
                     {
-                      "value": "192.168.0.17",
+                      "value": "192.168.1.11",
                       "controlAddress": "/remoteHost"
                     }
                   ],
@@ -252,9 +258,9 @@
               "parameters": [
                 {
                   "value": [
-                    0.3960784375667572,
-                    0.3490196168422699,
                     1.0,
+                    0.4666666686534882,
+                    0.3254902064800262,
                     1.0
                   ],
                   "controlAddress": "/color",
@@ -303,6 +309,13 @@
               -164.0
             ],
             "controlAddress": "/viewUIPosition"
+          },
+          {
+            "value": [
+              282.0,
+              255.0
+            ],
+            "controlAddress": "/viewUISize"
           },
           {
             "value": true,
@@ -361,6 +374,336 @@
                             "param": {
                               "value": "test.mp4",
                               "controlAddress": "/states/state/processors/play/consequencesTRUE/consequence/command/arguments/#1/#1"
+                            }
+                          }
+                        ],
+                        "viewOffset": [
+                          0,
+                          0
+                        ],
+                        "viewZoom": 1.0
+                      }
+                    }
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequencesOff": {
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              }
+            },
+            {
+              "parameters": [
+                {
+                  "value": true,
+                  "controlAddress": "/enabled"
+                }
+              ],
+              "niceName": "Play Loop",
+              "editorIsCollapsed": true,
+              "type": "Action",
+              "conditions": {
+                "items": [
+                  {
+                    "niceName": "From Input Value",
+                    "type": "From Input Value"
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequences": {
+                "items": [
+                  {
+                    "niceName": "Consequence",
+                    "type": "Consequence",
+                    "commandModule": "osc",
+                    "commandPath": "",
+                    "commandType": "Custom Message",
+                    "command": {
+                      "parameters": [
+                        {
+                          "value": "/play",
+                          "controlAddress": "/address"
+                        }
+                      ],
+                      "paramLinks": {
+                      },
+                      "argManager": {
+                        "items": [
+                          {
+                            "parameters": [
+                              {
+                                "value": "test.mp4",
+                                "controlAddress": "/#1"
+                              }
+                            ],
+                            "niceName": "name",
+                            "type": "String",
+                            "param": {
+                              "value": "test.mp4",
+                              "controlAddress": "/states/state/processors/playLoop/consequencesTRUE/consequence/command/arguments/name/#1"
+                            }
+                          },
+                          {
+                            "parameters": [
+                              {
+                                "value": true,
+                                "minValue": 0,
+                                "maxValue": 1,
+                                "default": false,
+                                "controlAddress": "/#2"
+                              }
+                            ],
+                            "niceName": "#2",
+                            "type": "Boolean",
+                            "param": {
+                              "value": true,
+                              "minValue": 0,
+                              "maxValue": 1,
+                              "default": false,
+                              "controlAddress": "/states/state/processors/playLoop/consequencesTRUE/consequence/command/arguments/#2/#2"
+                            }
+                          }
+                        ],
+                        "viewOffset": [
+                          0,
+                          0
+                        ],
+                        "viewZoom": 1.0
+                      }
+                    }
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequencesOff": {
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              }
+            },
+            {
+              "niceName": "Play Start",
+              "editorIsCollapsed": true,
+              "type": "Action",
+              "conditions": {
+                "items": [
+                  {
+                    "niceName": "From Input Value",
+                    "type": "From Input Value"
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequences": {
+                "items": [
+                  {
+                    "niceName": "Consequence",
+                    "type": "Consequence",
+                    "commandModule": "osc",
+                    "commandPath": "",
+                    "commandType": "Custom Message",
+                    "command": {
+                      "parameters": [
+                        {
+                          "value": "/play",
+                          "controlAddress": "/address"
+                        }
+                      ],
+                      "paramLinks": {
+                      },
+                      "argManager": {
+                        "items": [
+                          {
+                            "parameters": [
+                              {
+                                "value": "test.mp4",
+                                "controlAddress": "/#1"
+                              }
+                            ],
+                            "niceName": "name",
+                            "type": "String",
+                            "param": {
+                              "value": "test.mp4",
+                              "controlAddress": "/states/state/processors/playStart/consequencesTRUE/consequence/command/arguments/name/#1"
+                            }
+                          },
+                          {
+                            "parameters": [
+                              {
+                                "value": false,
+                                "minValue": 0,
+                                "maxValue": 1,
+                                "default": false,
+                                "controlAddress": "/#2"
+                              }
+                            ],
+                            "niceName": "loop",
+                            "type": "Boolean",
+                            "param": {
+                              "value": false,
+                              "minValue": 0,
+                              "maxValue": 1,
+                              "default": false,
+                              "controlAddress": "/states/state/processors/playStart/consequencesTRUE/consequence/command/arguments/loop/#2"
+                            }
+                          },
+                          {
+                            "parameters": [
+                              {
+                                "value": 6.5,
+                                "controlAddress": "/#3"
+                              }
+                            ],
+                            "niceName": "start",
+                            "type": "Float",
+                            "param": {
+                              "value": 6.5,
+                              "controlAddress": "/states/state/processors/playStart/consequencesTRUE/consequence/command/arguments/start/#3"
+                            }
+                          }
+                        ],
+                        "viewOffset": [
+                          0,
+                          0
+                        ],
+                        "viewZoom": 1.0
+                      }
+                    }
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequencesOff": {
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              }
+            },
+            {
+              "niceName": "Play Start Stop",
+              "editorIsCollapsed": true,
+              "type": "Action",
+              "conditions": {
+                "items": [
+                  {
+                    "niceName": "From Input Value",
+                    "type": "From Input Value"
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequences": {
+                "items": [
+                  {
+                    "niceName": "Consequence",
+                    "type": "Consequence",
+                    "commandModule": "osc",
+                    "commandPath": "",
+                    "commandType": "Custom Message",
+                    "command": {
+                      "parameters": [
+                        {
+                          "value": "/play",
+                          "controlAddress": "/address"
+                        }
+                      ],
+                      "paramLinks": {
+                      },
+                      "argManager": {
+                        "items": [
+                          {
+                            "parameters": [
+                              {
+                                "value": "test.mp4",
+                                "controlAddress": "/#1"
+                              }
+                            ],
+                            "niceName": "name",
+                            "type": "String",
+                            "param": {
+                              "value": "test.mp4",
+                              "controlAddress": "/states/state/processors/playStartStop/consequencesTRUE/consequence/command/arguments/name/#1"
+                            }
+                          },
+                          {
+                            "parameters": [
+                              {
+                                "value": true,
+                                "minValue": 0,
+                                "maxValue": 1,
+                                "default": false,
+                                "controlAddress": "/#2"
+                              }
+                            ],
+                            "niceName": "loop",
+                            "type": "Boolean",
+                            "param": {
+                              "value": true,
+                              "minValue": 0,
+                              "maxValue": 1,
+                              "default": false,
+                              "controlAddress": "/states/state/processors/playStartStop/consequencesTRUE/consequence/command/arguments/loop/#2"
+                            }
+                          },
+                          {
+                            "parameters": [
+                              {
+                                "value": 0.6000000238418579,
+                                "controlAddress": "/#3"
+                              }
+                            ],
+                            "niceName": "start",
+                            "type": "Float",
+                            "param": {
+                              "value": 0.6000000238418579,
+                              "controlAddress": "/states/state/processors/playStartStop/consequencesTRUE/consequence/command/arguments/start/#3"
+                            }
+                          },
+                          {
+                            "parameters": [
+                              {
+                                "value": 3.30000114440918,
+                                "controlAddress": "/#4"
+                              }
+                            ],
+                            "niceName": "#4",
+                            "type": "Float",
+                            "param": {
+                              "value": 3.30000114440918,
+                              "controlAddress": "/states/state/processors/playStartStop/consequencesTRUE/consequence/command/arguments/#4/#4"
                             }
                           }
                         ],
@@ -572,14 +915,14 @@
                           {
                             "parameters": [
                               {
-                                "value": 64.29999542236328,
+                                "value": 86.79999542236328,
                                 "controlAddress": "/#2"
                               }
                             ],
                             "niceName": "#2",
                             "type": "Float",
                             "param": {
-                              "value": 64.29999542236328,
+                              "value": 86.79999542236328,
                               "controlAddress": "/states/state/processors/text/consequencesTRUE/consequence/command/arguments/#2/#2"
                             }
                           },
@@ -587,9 +930,9 @@
                             "parameters": [
                               {
                                 "value": [
-                                  0.7764706015586853,
+                                  0.5529412031173706,
                                   0.6117647290229797,
-                                  0.7450980544090271,
+                                  0.7764706015586853,
                                   1.0
                                 ],
                                 "controlAddress": "/#3"
@@ -599,9 +942,9 @@
                             "type": "Color",
                             "param": {
                               "value": [
-                                0.7764706015586853,
+                                0.5529412031173706,
                                 0.6117647290229797,
-                                0.7450980544090271,
+                                0.7764706015586853,
                                 1.0
                               ],
                               "controlAddress": "/states/state/processors/text/consequencesTRUE/consequence/command/arguments/#3/#3"
@@ -718,9 +1061,9 @@
                             "parameters": [
                               {
                                 "value": [
-                                  0.3960784375667572,
-                                  0.3490196168422699,
                                   1.0,
+                                  0.4666666686534882,
+                                  0.3254902064800262,
                                   1.0
                                 ],
                                 "controlAddress": "/#1"
@@ -730,9 +1073,9 @@
                             "type": "Color",
                             "param": {
                               "value": [
-                                0.3960784375667572,
-                                0.3490196168422699,
                                 1.0,
+                                0.4666666686534882,
+                                0.3254902064800262,
                                 1.0
                               ],
                               "controlAddress": "/states/state/processors/color/outputs/mappingOutput/command/arguments/#1/#1"

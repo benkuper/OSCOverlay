@@ -10,6 +10,8 @@ import 'package:osc/osc.dart';
 import 'package:video_player/video_player.dart';
 import 'package:vibration/vibration.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:r_get_ip/r_get_ip.dart';
+
 class OverlayCommand {
   String command;
   dynamic data;
@@ -54,18 +56,16 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     osc.listen(onOSCData);
 
-    getIp();
+    RGetIp.internalIP.then((value) {
+      ip = value!;
+      setState(() {});
+    });
 
     WidgetsFlutterBinding.ensureInitialized();
     getExternalStorageDirectory().then((value) {
       libDir = value;
       setState(() {});
     });
-  }
-
-  void getIp() async
-  {
-    NetworkInfo().getWifiIP().
   }
 
   void onOSCData(msg) async {
@@ -77,31 +77,33 @@ class _MyAppState extends State<MyApp> {
         break;
 
       case "/play":
-        print("Play media " + msg.arguments[0].toString());
-        try {
-          FlutterOverlayApps.showOverlay(alignment: OverlayAlignment.topLeft);
-          await Future.delayed(const Duration(milliseconds: 20));
+        if (msg.arguments.length > 0) {
+          print("Play media " + msg.arguments[0].toString());
+          try {
+            FlutterOverlayApps.showOverlay(alignment: OverlayAlignment.topLeft);
+            await Future.delayed(const Duration(milliseconds: 20));
 
-          bool loop =
-              msg.arguments.length > 1 ? msg.arguments[1].toBool() : false;
-          double start =
-              msg.arguments.length > 2 ? msg.arguments[2].toDouble() : 0;
-          bool end =
-              msg.arguments.length > 3 ? msg.arguments[3].toDouble() : -1;
+            bool loop = msg.arguments.length > 1
+                ? msg.arguments[1].toInt() == 1
+                : false;
+            double start =
+                msg.arguments.length > 2 ? msg.arguments[2].toDouble() : 0;
+            double end =
+                msg.arguments.length > 3 ? msg.arguments[3].toDouble() : -1;
 
-          Object data = {
-            "file": msg.arguments[0]?.toString(),
-            "loop": loop,
-            "start": start,
-            "end": end
-          };
+            Object data = {
+              "file": msg.arguments[0]?.toString(),
+              "loop": loop,
+              "start": start,
+              "end": end
+            };
 
-          FlutterOverlayApps.sendDataToAndFromOverlay(
-              jsonEncode(OverlayCommand("play", data)));
-        } on Exception catch (_) {
-          print("Error launching video");
+            FlutterOverlayApps.sendDataToAndFromOverlay(
+                jsonEncode(OverlayCommand("play", data)));
+          } on Exception catch (_) {
+            print("Error launching video");
+          }
         }
-
         break;
 
       case "/stop":
@@ -172,11 +174,12 @@ class _MyAppState extends State<MyApp> {
                   child: Column(children: [
                 Padding(
                   padding: EdgeInsets.all(50),
-                  child: Text(
-                      "Commands :\n\n/play <file.ext> (mp3, mp4, wav...) [loop (0/1), start(0-... seconds), end(0-...)]\n\n/play <url> (http://192.168.1.10/file.mp4) [loop (0/1), start(0-... seconds), end(0-...)]" +
-                          "\n\n/stop\n\n/vibrate <time> (seconds)\n\n/color <r> <g> <b> (floats)\n\n/text <text> [<fontSize> <textColor r g b> <bgColor r g b>]\n\n\n\n" +
-                          "Local files should be placed in \n" +
-                          (libDir != null ? libDir!.path : "")),
+                  child: Text("IP : " +
+                      ip +
+                      "\n\nCommands :\n\n/play <file.ext> (mp3, mp4, wav...) [loop (0/1), start(0-... seconds), end(0-...)]\n\n/play <url> (http://192.168.1.10/file.mp4) [loop (0/1), start(0-... seconds), end(0-...)]" +
+                      "\n\n/stop\n\n/vibrate <time> (seconds)\n\n/color <r> <g> <b> (floats)\n\n/text <text> [<fontSize> <textColor r g b> <bgColor r g b>]\n\n\n\n" +
+                      "Local files should be placed in \n" +
+                      (libDir != null ? libDir!.path : "")),
                 ),
                 Padding(
                     padding: EdgeInsets.all(50),
@@ -205,6 +208,12 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
   double fontSize = 30;
   Color textColor = Colors.white;
   bool isPlaying = false;
+
+  bool reSeeking = false;
+
+  bool loop = false;
+  double start = 0;
+  double end = -1;
 
   @override
   void initState() {
@@ -242,6 +251,10 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
 
           Directory? libDir = await getExternalStorageDirectory();
 
+          if (player != null) {
+            player!.removeListener(onPlayerUpdate);
+          }
+
           var filename = c["data"]["file"].toString();
           if (filename.startsWith("http")) {
             player = VideoPlayerController.network(filename);
@@ -250,28 +263,28 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
             player = VideoPlayerController.file(f);
           }
 
-          bool loop = c["data"]["loop"];
-          double start = c["data"]["start"];
-          double end = c["data"]["end"];
-
-
-          if (start > 0)
-            player!.seekTo(Duration(milliseconds: (start * 1000).toInt()));
-
-          player!.addListener(() {
-            setState(() {});
-            if(end > start) player?.position.then((value) => checkPos(value, start, end, loop));
-          });
+          loop = c["data"]["loop"];
+          start = c["data"]["start"];
+          end = c["data"]["end"];
 
           try {
-            player!.initialize().then((_) => setState(() {}));
-            player!.setLooping(loop);
-            player!.play();
+            player!.initialize().then((_) {
+              player!.setLooping(loop);
+              if (start > 0)
+                player?.seekTo(Duration(milliseconds: (start * 1000).toInt()));
+
+              player!.play();
+
+              player!.addListener(onPlayerUpdate);
+
+              setState(() {});
+            });
+
+            print("Play with looping " + loop.toString());
           } on Exception catch (_) {
             print("Error playing video, probably intent problem");
           }
         }
-
 
         break;
 
@@ -293,13 +306,38 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
         break;
     }
   }
-  
-  void checkPos(pos, start, end, loop)
-  {
-    if(pos > end)
-    {
-      if(loop) player?.seekTo(start) ;
-      else player?.pause();
+
+  void onPlayerUpdate() {
+    setState(() {});
+    if (end > start) {
+      player?.position.then((value) => checkPos(value));
+    }
+  }
+
+  void checkPos(pos) {
+    var pSeconds = pos.inMilliseconds / 1000.0;
+    // print("Check pos " +
+    //     pSeconds.toString() +
+    //     "," +
+    //     start.toString() +
+    //     "," +
+    //     end.toString() +
+    //     "," +
+    //     loop.toString());
+
+    if (pSeconds > end) {
+      if (loop) {
+        if (!reSeeking) {
+          print("PAUSE");
+          reSeeking = true;
+          player?.pause().then((value) {
+            print("SEEK");
+            player?.seekTo(Duration(milliseconds: (start * 1000).toInt()));
+            player?.play().then((value) => reSeeking = false);
+          });
+        }
+      } else
+        player?.pause();
     }
   }
 

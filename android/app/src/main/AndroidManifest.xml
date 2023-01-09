@@ -4,7 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+   
    <application
         android:label="oscoverlay"
         android:name="${applicationName}"
@@ -42,6 +43,9 @@
             <service
            android:name="com.phan_tech.flutter_overlay_apps.OverlayService"
            android:exported="false" />
+
+           <service android:name="flutter.overlay.window.flutter_overlay_window.OverlayService" android:exported="false" />
+
     </application>
 
 

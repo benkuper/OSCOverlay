@@ -1,7 +1,7 @@
 {
   "metaData": {
-    "version": "1.9.13",
-    "versionNumber": 67853
+    "version": "1.9.14b4",
+    "versionNumber": 67854
   },
   "projectSettings": {
     "containers": {
@@ -28,32 +28,32 @@
   "layout": {
     "mainLayout": {
       "type": 1,
-      "width": 1920,
-      "height": 989,
+      "width": 1413,
+      "height": 831,
       "direction": 2,
       "shifters": [
         {
           "type": 1,
-          "width": 1920,
-          "height": 989,
+          "width": 1413,
+          "height": 831,
           "direction": 2,
           "shifters": [
             {
               "type": 1,
-              "width": 1920,
-              "height": 614,
+              "width": 1413,
+              "height": 535,
               "direction": 1,
               "shifters": [
                 {
                   "type": 1,
                   "width": 195,
-                  "height": 614,
+                  "height": 535,
                   "direction": 2,
                   "shifters": [
                     {
                       "type": 0,
                       "width": 195,
-                      "height": 316,
+                      "height": 277,
                       "currentContent": "Modules",
                       "tabs": [
                         {
@@ -64,7 +64,7 @@
                     {
                       "type": 0,
                       "width": 195,
-                      "height": 291,
+                      "height": 252,
                       "currentContent": "Custom Variables",
                       "tabs": [
                         {
@@ -76,8 +76,8 @@
                 },
                 {
                   "type": 0,
-                  "width": 1171,
-                  "height": 614,
+                  "width": 664,
+                  "height": 535,
                   "currentContent": "State Machine",
                   "tabs": [
                     {
@@ -97,7 +97,7 @@
                 {
                   "type": 0,
                   "width": 542,
-                  "height": 614,
+                  "height": 535,
                   "currentContent": "Inspector",
                   "tabs": [
                     {
@@ -109,14 +109,14 @@
             },
             {
               "type": 1,
-              "width": 1920,
-              "height": 369,
+              "width": 1413,
+              "height": 290,
               "direction": 1,
               "shifters": [
                 {
                   "type": 0,
                   "width": 178,
-                  "height": 369,
+                  "height": 290,
                   "currentContent": "Sequences",
                   "tabs": [
                     {
@@ -126,8 +126,8 @@
                 },
                 {
                   "type": 0,
-                  "width": 1358,
-                  "height": 369,
+                  "width": 851,
+                  "height": 290,
                   "currentContent": "Sequence Editor",
                   "tabs": [
                     {
@@ -138,7 +138,7 @@
                 {
                   "type": 0,
                   "width": 372,
-                  "height": 369,
+                  "height": 290,
                   "currentContent": "Logger",
                   "tabs": [
                     {
@@ -181,7 +181,7 @@
         "params": {
           "parameters": [
             {
-              "value": "RGB Float",
+              "value": "RGBA Float",
               "controlAddress": "/colorSendMode"
             }
           ],
@@ -312,8 +312,8 @@
           },
           {
             "value": [
-              282.0,
-              255.0
+              288.0,
+              300.0
             ],
             "controlAddress": "/viewUISize"
           },
@@ -375,6 +375,26 @@
                               "value": "test.mp4",
                               "controlAddress": "/states/state/processors/play/consequencesTRUE/consequence/command/arguments/#1/#1"
                             }
+                          },
+                          {
+                            "parameters": [
+                              {
+                                "value": 0.3107049763202667,
+                                "minValue": 0,
+                                "maxValue": 1,
+                                "default": 0.0,
+                                "controlAddress": "/#2"
+                              }
+                            ],
+                            "niceName": "#2",
+                            "type": "Float",
+                            "param": {
+                              "value": 0.3107049763202667,
+                              "minValue": 0,
+                              "maxValue": 1,
+                              "default": 0.0,
+                              "controlAddress": "/states/state/processors/play/consequencesTRUE/consequence/command/arguments/#2/#2"
+                            }
                           }
                         ],
                         "viewOffset": [
@@ -401,12 +421,6 @@
               }
             },
             {
-              "parameters": [
-                {
-                  "value": true,
-                  "controlAddress": "/enabled"
-                }
-              ],
               "niceName": "Play Loop",
               "editorIsCollapsed": true,
               "type": "Action",
@@ -454,6 +468,20 @@
                             "param": {
                               "value": "test.mp4",
                               "controlAddress": "/states/state/processors/playLoop/consequencesTRUE/consequence/command/arguments/name/#1"
+                            }
+                          },
+                          {
+                            "parameters": [
+                              {
+                                "value": 0.2000007629394531,
+                                "controlAddress": "/#3"
+                              }
+                            ],
+                            "niceName": "#3",
+                            "type": "Float",
+                            "param": {
+                              "value": 0.2000007629394531,
+                              "controlAddress": "/states/state/processors/playLoop/consequencesTRUE/consequence/command/arguments/#3/#3"
                             }
                           },
                           {
@@ -957,7 +985,7 @@
                                   0.6823529601097107,
                                   0.2039215713739395,
                                   0.0117647061124444,
-                                  1.0
+                                  0.196078434586525
                                 ],
                                 "controlAddress": "/#4"
                               }
@@ -969,9 +997,169 @@
                                 0.6823529601097107,
                                 0.2039215713739395,
                                 0.0117647061124444,
-                                1.0
+                                0.196078434586525
                               ],
                               "controlAddress": "/states/state/processors/text/consequencesTRUE/consequence/command/arguments/#4/#4"
+                            }
+                          }
+                        ],
+                        "viewOffset": [
+                          0,
+                          0
+                        ],
+                        "viewZoom": 1.0
+                      }
+                    }
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequencesOff": {
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              }
+            },
+            {
+              "niceName": "doubleTap ON",
+              "editorIsCollapsed": true,
+              "type": "Action",
+              "conditions": {
+                "items": [
+                  {
+                    "niceName": "From Input Value",
+                    "type": "From Input Value"
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequences": {
+                "items": [
+                  {
+                    "niceName": "Consequence",
+                    "type": "Consequence",
+                    "commandModule": "osc",
+                    "commandPath": "",
+                    "commandType": "Custom Message",
+                    "command": {
+                      "parameters": [
+                        {
+                          "value": "/doubleTap",
+                          "controlAddress": "/address"
+                        }
+                      ],
+                      "paramLinks": {
+                      },
+                      "argManager": {
+                        "items": [
+                          {
+                            "parameters": [
+                              {
+                                "value": true,
+                                "minValue": 0,
+                                "maxValue": 1,
+                                "default": false,
+                                "controlAddress": "/#1"
+                              }
+                            ],
+                            "niceName": "#1",
+                            "type": "Boolean",
+                            "param": {
+                              "value": true,
+                              "minValue": 0,
+                              "maxValue": 1,
+                              "default": false,
+                              "controlAddress": "/states/state/processors/doubleTapON/consequencesTRUE/consequence/command/arguments/#1/#1"
+                            }
+                          }
+                        ],
+                        "viewOffset": [
+                          0,
+                          0
+                        ],
+                        "viewZoom": 1.0
+                      }
+                    }
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequencesOff": {
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              }
+            },
+            {
+              "niceName": "doubleTap OFF",
+              "editorIsCollapsed": true,
+              "type": "Action",
+              "conditions": {
+                "items": [
+                  {
+                    "niceName": "From Input Value",
+                    "type": "From Input Value"
+                  }
+                ],
+                "viewOffset": [
+                  0,
+                  0
+                ],
+                "viewZoom": 1.0
+              },
+              "consequences": {
+                "items": [
+                  {
+                    "niceName": "Consequence",
+                    "type": "Consequence",
+                    "commandModule": "osc",
+                    "commandPath": "",
+                    "commandType": "Custom Message",
+                    "command": {
+                      "parameters": [
+                        {
+                          "value": "/doubleTap",
+                          "controlAddress": "/address"
+                        }
+                      ],
+                      "paramLinks": {
+                      },
+                      "argManager": {
+                        "items": [
+                          {
+                            "parameters": [
+                              {
+                                "value": false,
+                                "minValue": 0,
+                                "maxValue": 1,
+                                "default": false,
+                                "controlAddress": "/#1"
+                              }
+                            ],
+                            "niceName": "#1",
+                            "type": "Boolean",
+                            "param": {
+                              "value": false,
+                              "minValue": 0,
+                              "maxValue": 1,
+                              "default": false,
+                              "controlAddress": "/states/state/processors/doubleTapOFF/consequencesTRUE/consequence/command/arguments/#1/#1"
                             }
                           }
                         ],

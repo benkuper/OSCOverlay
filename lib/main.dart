@@ -70,6 +70,13 @@ class _MyAppState extends State<MyApp> {
 
   void onOSCData(msg) async {
     switch (msg.address) {
+      case "/doubleTap":
+        print("DoubleTap " + msg.arguments[0].toString());
+        var dt = (msg.arguments[0].toInt() == 1);
+        FlutterOverlayApps.sendDataToAndFromOverlay(
+            jsonEncode(OverlayCommand("doubleTap", dt)));
+        break;
+
       case "/vibrate":
         print("Vibrate " + msg.arguments[0].toString());
         Vibration.vibrate(
@@ -83,16 +90,20 @@ class _MyAppState extends State<MyApp> {
             FlutterOverlayApps.showOverlay(alignment: OverlayAlignment.topLeft);
             await Future.delayed(const Duration(milliseconds: 20));
 
-            bool loop = msg.arguments.length > 1
-                ? msg.arguments[1].toInt() == 1
+            double volume =
+                msg.arguments.length > 1 ? msg.arguments[1].toDouble() : 1;
+
+            bool loop = msg.arguments.length > 2
+                ? msg.arguments[2].toInt() == 1
                 : false;
             double start =
-                msg.arguments.length > 2 ? msg.arguments[2].toDouble() : 0;
+                msg.arguments.length > 3 ? msg.arguments[3].toDouble() : 0;
             double end =
-                msg.arguments.length > 3 ? msg.arguments[3].toDouble() : -1;
+                msg.arguments.length > 4 ? msg.arguments[4].toDouble() : -1;
 
             Object data = {
               "file": msg.arguments[0]?.toString(),
+              "volume": volume,
               "loop": loop,
               "start": start,
               "end": end
@@ -138,7 +149,7 @@ class _MyAppState extends State<MyApp> {
                 (msg.arguments[3] * 255).toInt(),
                 (msg.arguments[4] * 255).toInt())
             : Colors.white;
-        var bc = msg.arguments.length > 5
+        var bc = msg.arguments.length > 6
             ? Color.fromARGB(
                 255,
                 (msg.arguments[5] * 255).toInt(),
@@ -176,9 +187,9 @@ class _MyAppState extends State<MyApp> {
                   padding: EdgeInsets.all(50),
                   child: Text("IP : " +
                       ip +
-                      "\n\nCommands :\n\n/play <file.ext> (mp3, mp4, wav...) [loop (0/1), start(0-... seconds), end(0-...)]\n\n/play <url> (http://192.168.1.10/file.mp4) [loop (0/1), start(0-... seconds), end(0-...)]" +
-                      "\n\n/stop\n\n/vibrate <time> (seconds)\n\n/color <r> <g> <b> (floats)\n\n/text <text> [<fontSize> <textColor r g b> <bgColor r g b>]\n\n\n\n" +
-                      "Local files should be placed in \n" +
+                      "\n\nCommands :\n\n/play <file.ext> (mp3, mp4, wav...) [volume (0-1), loop (0/1), start(0-... seconds), end(0-...)]\n\n/play <url> (http://192.168.1.10/file.mp4) [volume (0-1), loop (0/1), start(0-... seconds), end(0-...)]" +
+                      "\n\n/stop\n\n/vibrate <time> (seconds)\n\n/color <r> <g> <b> (floats)\n\n/text <text> [<fontSize> <textColor r g b> <bgColor r g b>]\n\n/doubleTap <0-1>\n\n\n\n" +
+                      "Local files should be placed in : \n" +
                       (libDir != null ? libDir!.path : "")),
                 ),
                 Padding(
@@ -211,9 +222,11 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
 
   bool reSeeking = false;
 
+  double volume = 1;
   bool loop = false;
   double start = 0;
   double end = -1;
+  bool useDoubleTap = false;
 
   @override
   void initState() {
@@ -231,16 +244,18 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
   Future handleCommand(c) async {
     String command = c["command"];
 
-    //init all content
-    if (player != null) {
-      player!.pause();
-    }
-    text = "";
-    bgColor = Colors.black;
-    fontSize = 30;
-    textColor = Colors.white;
+    if (command != "doubleTap") {
+      //init all content
+      if (player != null) {
+        player!.pause();
+      }
+      text = "";
+      bgColor = Colors.transparent;
+      fontSize = 30;
+      textColor = Colors.white;
 
-    isPlaying = false;
+      isPlaying = false;
+    }
 
     switch (command) {
       case "play":
@@ -263,6 +278,9 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
             player = VideoPlayerController.file(f);
           }
 
+          var isAudio = filename.endsWith("mp3") || filename.endsWith(("wav"));
+
+          volume = c["data"]["volume"];
           loop = c["data"]["loop"];
           start = c["data"]["start"];
           end = c["data"]["end"];
@@ -270,6 +288,8 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
           try {
             player!.initialize().then((_) {
               player!.setLooping(loop);
+              player!.setVolume(volume);
+
               if (start > 0)
                 player?.seekTo(Duration(milliseconds: (start * 1000).toInt()));
 
@@ -303,6 +323,10 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
         fontSize = d["fontSize"];
         textColor = Color(d["textColor"]);
         bgColor = Color(d["bgColor"]);
+        break;
+
+      case "doubleTap":
+        useDoubleTap = c["data"];
         break;
     }
   }
@@ -347,11 +371,14 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
         child: InkWell(
             onDoubleTap: () {
               // close overlay
-              if (player != null) {
-                player!.pause();
-                // player!.dispose();
+              print("Double tap : " + useDoubleTap.toString());
+              if (useDoubleTap) {
+                if (player != null) {
+                  player!.pause();
+                  // player!.dispose();
+                }
+                FlutterOverlayApps.closeOverlay();
               }
-              FlutterOverlayApps.closeOverlay();
             },
             child: Stack(children: [
               Container(

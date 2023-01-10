@@ -51,6 +51,9 @@ class _MyAppState extends State<MyApp> {
   Directory? libDir;
   String ip = "[not found]";
 
+  InternetAddress? pingIP;
+  Timer? pingTimer;
+
   @override
   void initState() {
     super.initState();
@@ -68,7 +71,22 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void pingTimerCallback() {
+    var sender = OSCSocket(destination: pingIP, destinationPort: 9001);
+    var m = OSCMessage("/ping", arguments: []);
+    sender.send(m);
+  }
+
+  void sendPing() {
+    pingTimer?.cancel();
+    pingTimer = Timer(Duration(seconds: 1), pingTimerCallback);
+  }
+
   void onOSCData(msg) async {
+    pingIP = osc.lastMessageAddress;
+
+    sendPing();
+
     switch (msg.address) {
       case "/doubleTap":
         print("DoubleTap " + msg.arguments[0].toString());

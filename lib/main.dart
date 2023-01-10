@@ -73,7 +73,7 @@ class _MyAppState extends State<MyApp> {
 
   void pingTimerCallback() {
     var sender = OSCSocket(destination: pingIP, destinationPort: 9001);
-    var m = OSCMessage("/ping", arguments: []);
+    var m = OSCMessage("/ping", arguments: [ip]);
     sender.send(m);
   }
 

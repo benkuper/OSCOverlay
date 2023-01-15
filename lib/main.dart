@@ -286,6 +286,7 @@ class _MyOverlayContentState extends State<MyOverlayContent> {
 
           if (player != null) {
             player!.removeListener(onPlayerUpdate);
+            player!.dispose();
           }
 
           var filename = c["data"]["file"].toString();

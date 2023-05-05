@@ -7,7 +7,7 @@
 - Connect the phone on the same wifi network as your computer
 - Check your phone's IP in the settings
 - Launch the app and check the available OSC commands with their signature
-- Enter the phone's IP in your OSC software and start controlling the phone
+- Enter the phone's IP in your OSC software and start controlling the phone. The app receives on port 9000
 - You can either send a /stop command or double-tap the overlay to close it 
 
 - To easily test the commands, you can use the overlaycontrol.noisette file inside control_example with Chataigne ( https://benjamin.kuperberg.fr/Chataigne ) 
